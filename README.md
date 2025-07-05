@@ -64,7 +64,7 @@ require("memos").setup({
   -- REQUIRED: Your Memos host URL
   host = "https://your-memos-host.com",
 
-  -- REQUIRED: Your Memos API token (Open API)
+  -- REQUIRED: Your Memos API token
   token = "your-super-secret-token",
 
   -- Number of memos to fetch per page
@@ -165,7 +165,7 @@ require("memos").setup({
   -- 必填: 你的 Memos 服务地址
   host = "https://your-memos-host.com",
 
-  -- 必填: 你的 Memos API 令牌 (Open API)
+  -- 必填: 你的 Memos API 令牌
   token = "your-super-secret-token",
 
   -- 每页获取的 memo 数量
