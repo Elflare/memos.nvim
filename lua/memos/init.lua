@@ -5,6 +5,7 @@ M.config = {
 	token = nil,
 	pageSize = 50,
 	keymaps = {
+		start_memos = "<leader>mm",
 		-- 在列表窗口中的快捷键
 		list = {
 			add_memo = "a",
@@ -29,6 +30,15 @@ function M.setup(opts)
 	M.config = vim.tbl_deep_extend("force", M.config, opts or {})
 	if not M.config.host or not M.config.token then
 		vim.notify("Memos: `host` and `token` must be configured.", vim.log.levels.ERROR)
+	end
+
+	if M.config.keymaps.start_memos then
+		vim.api.nvim_set_keymap(
+			"n",
+			M.config.keymaps.start_memos,
+			"<Cmd>Memos<CR>",
+			{ noremap = true, silent = true, desc = "Open Memos list" }
+		)
 	end
 end
 

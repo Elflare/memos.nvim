@@ -39,22 +39,24 @@ Install with |lazy.nvim|:
 >lua
 -- lua/plugins/memos.lua
 return {
-  {
-    "your-github-username/memos.nvim",
-    name = "memos.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = { "Memos", "MemosCreate" },
-    config = function()
-      require("memos").setup({
-        host = "https://your-memos-host.com",
-        token = "your-super-secret-token",
-      })
-    end,
-  },
-  {
-    "nvim-lua/plenary.nvim",
-    lazy = true,
-  },
+	"Elflare/memos.nvim",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	config = function()
+		require("memos").setup({
+			host = "",
+			token = "",
+			pageSize = 50,
+			keymaps = {
+				list = {
+					add_memo = "a",
+					-- ... other list keymaps
+				},
+				buffer = {
+					save = "<leader>ms", -- Your desired save keymap
+				},
+			},
+		})
+	end,
 }
 <
 ==============================================================================
@@ -73,6 +75,11 @@ COMMANDS                                            *memos-commands*
   creating or editing.
 
 DEFAULT KEYMAPS                                     *memos-keymaps*
+
+*Global Keymap:*
+| Key                | Action                               |
+|--------------------|--------------------------------------|
+| `<leader>mm`       | Open the Memos list                  |
 
 *In the Memo List Window:*
 | Key                | Action                               |
@@ -111,6 +118,9 @@ require("memos").setup({
 
   -- Set to false or nil to disable a keymap
   keymaps = {
+    -- Keymap to open the memos list. Default: <leader>mm
+    start_memos = "<leader>mm",
+
     -- Keymaps for the memo list window
     list = {
       add_memo = "a",

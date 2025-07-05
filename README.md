@@ -6,7 +6,7 @@ A Neovim plugin to interact with [Memos](https://github.com/usememos/memos) righ
 
 ## ✨ Features
 
--   **List Memos**: View, search, and paginate through your memos in a floating window.
+-   **List Memos**: View, search, and paginate through your memos.
 -   **Create & Edit**: Create new memos or edit existing ones in a dedicated buffer with `markdown` filetype support.
 -   **Delete Memos**: Delete memos directly from the list.
 -   **Customizable**: Configure API endpoints, keymaps, and more.
@@ -19,51 +19,25 @@ Install with [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 -- lua/plugins/memos.lua
-
 return {
-  -- Memos.nvim: A plugin to interact with Memos from within Neovim
-  {
-    -- IMPORTANT: Replace with your actual GitHub username/repo
-    "your-github-username/memos.nvim",
-
-    -- Optional, but good for identification in Lazy UI
-    name = "memos.nvim",
-
-    dependencies = { "nvim-lua/plenary.nvim" },
-
-    -- Load the plugin on these commands
-    cmd = { "Memos", "MemosCreate" },
-
-    config = function()
-      require("memos").setup({
-        -- REQUIRED: Your Memos host URL
-        host = "https://your-memos-host.com",
-
-        -- REQUIRED: Your Memos API token (Open API)
-        token = "your-super-secret-token",
-
-        -- Optional: Customize keymaps
-        keymaps = {
-          -- Keymaps for the editing/creating buffer
-          buffer = {
-            save = "<leader>ms", -- Save the current memo
-          },
-          -- Keymaps for the memo list window
-          list = {
-            add_memo = "a", -- Add a new memo
-            edit_memo = "<CR>", -- Edit selected memo
-            -- ... other keymaps can be configured here
-          }
-        },
-      })
-    end,
-  },
-
-  -- Plenary is a required dependency
-  {
-    "nvim-lua/plenary.nvim",
-    lazy = true,
-  },
+	"Elflare/memos.nvim",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	config = function()
+		require("memos").setup({
+			host = "",
+			token = "",
+			pageSize = 50,
+			keymaps = {
+				list = {
+					add_memo = "a",
+					-- ... other list keymaps
+				},
+				buffer = {
+					save = "<leader>ms", -- Your desired save keymap
+				},
+			},
+		})
+	end,
 }
 ```
 
@@ -76,6 +50,12 @@ return {
 -   `:MemosSave`: (Available in the memo buffer) Saves the memo you are currently creating or editing.
 
 ### Default Keymaps
+
+#### Global
+
+| Key                | Action                               |
+| ------------------ | ------------------------------------ |
+| `<leader>mm`       | Open the Memos list                  |
 
 #### In the Memo List Window
 
@@ -113,6 +93,9 @@ require("memos").setup({
 
   -- Set to false or nil to disable a keymap
   keymaps = {
+    -- Keymap to open the memos list. Default: <leader>mm
+    start_memos = "<leader>mm",
+
     -- Keymaps for the memo list window
     list = {
       add_memo = "a",
@@ -143,7 +126,7 @@ require("memos").setup({
 
 ## ✨ 功能
 
--   **列表 Memos**: 在浮动窗口中查看、搜索和翻页你的 memos。
+-   **列表 Memos**: 查看、搜索和翻页你的 memos。
 -   **创建与编辑**: 在专用的、支持 `markdown` 文件类型的缓冲区中创建新 memo 或编辑现有 memo。
 -   **删除 Memos**: 直接从列表中删除 memo。
 -   **可定制**: 可配置 API 地址、快捷键等。
@@ -156,51 +139,25 @@ require("memos").setup({
 
 ```lua
 -- lua/plugins/memos.lua
-
 return {
-  -- Memos.nvim: 一个在 Neovim 中与 Memos 交互的插件
-  {
-    -- 重要: 请将这里替换为你的 GitHub 用户名/仓库名
-    "your-github-username/memos.nvim",
-
-    -- 可选，但在 Lazy 管理界面中易于识别
-    name = "memos.nvim",
-
-    dependencies = { "nvim-lua/plenary.nvim" },
-
-    -- 在执行这些命令时加载插件
-    cmd = { "Memos", "MemosCreate" },
-
-    config = function()
-      require("memos").setup({
-        -- 必填: 你的 Memos 服务地址
-        host = "https://your-memos-host.com",
-
-        -- 必填: 你的 Memos API 令牌 (Open API)
-        token = "your-super-secret-token",
-
-        -- 可选: 自定义快捷键
-        keymaps = {
-          -- 编辑/创建窗口的快捷键
-          buffer = {
-            save = "<leader>ms", -- 保存当前 memo
-          },
-          -- memo 列表窗口的快捷键
-          list = {
-            add_memo = "a", -- 新增 memo
-            edit_memo = "<CR>", -- 编辑所选 memo
-            -- ... 其他快捷键也可以在这里配置
-          }
-        },
-      })
-    end,
-  },
-
-  -- Plenary 是一个必要的依赖
-  {
-    "nvim-lua/plenary.nvim",
-    lazy = true,
-  },
+	"Elflare/memos.nvim",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	config = function()
+		require("memos").setup({
+			host = "",
+			token = "",
+			pageSize = 50,
+			keymaps = {
+				list = {
+					add_memo = "a",
+					-- ... 其他列表快捷键
+				},
+				buffer = {
+					save = "<leader>ms", -- 这是您想要的保存快捷键
+				},
+			},
+		})
+	end,
 }
 ```
 
@@ -213,6 +170,12 @@ return {
 -   `:MemosSave`: (在 memo 编辑缓冲区中可用) 保存你正在创建或编辑的 memo。
 
 ### 默认快捷键
+
+#### 全局快捷键
+
+| 按键               | 功能                               |
+| ------------------ | ---------------------------------- |
+| `<leader>mm`       | 打开 Memos 列表                    |
 
 #### 在 Memo 列表窗口中
 
@@ -250,6 +213,9 @@ require("memos").setup({
 
   -- 设置为 false 或 nil 可以禁用某个快捷键
   keymaps = {
+    -- 用于打开 Memos 列表的快捷键。默认值: <leader>mm
+    start_memos = "<leader>mm",
+
     -- memo 列表窗口的快捷键
     list = {
       add_memo = "a",
