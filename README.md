@@ -1,7 +1,5 @@
 # memos.nvim
-
 English | [简体中文](./README.md#memosnvim-简体中文)
-
 A Neovim plugin to interact with [Memos](https://github.com/usememos/memos) right inside the editor. List, create, edit, and delete your memos without leaving Neovim.
 
 ## ✨ Features
@@ -18,27 +16,7 @@ Requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim).
 Install with [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
--- lua/plugins/memos.lua
-return {
-	"Elflare/memos.nvim",
-	dependencies = { "nvim-lua/plenary.nvim" },
-	config = function()
-		require("memos").setup({
-			host = "",
-			token = "",
-			pageSize = 50,
-			keymaps = {
-				list = {
-					add_memo = "a",
-					-- ... other list keymaps
-				},
-				buffer = {
-					save = "<leader>ms", -- Your desired save keymap
-				},
-			},
-		})
-	end,
-}
+{ "Elflare/memos.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
 ```
 
 ## 🚀 Usage
@@ -53,34 +31,35 @@ return {
 
 #### Global
 
-| Key                | Action                               |
-| ------------------ | ------------------------------------ |
-| `<leader>mm`       | Open the Memos list                  |
+| Key          | Action              |
+| ------------ | ------------------- |
+| `<leader>mm` | Open the Memos list |
 
 #### In the Memo List Window
 
-| Key                | Action                               |
-| ------------------ | ------------------------------------ |
-| `a`                | Add a new memo                       |
-| `d` or `dd`        | Delete the selected memo             |
-| `<CR>`             | Edit the selected memo               |
-| `<Tab>`            | Edit the selected memo in a vsplit   |
-| `s`                | Search your memos                    |
-| `r`                | Refresh the memo list                |
-| `.`                | Load the next page of memos          |
-| `q`                | Quit the list window                 |
+| Key         | Action                             |
+| ----------- | ---------------------------------- |
+| `a`         | Add a new memo                     |
+| `d` or `dd` | Delete the selected memo           |
+| `<CR>`      | Edit the selected memo             |
+| `<Tab>`     | Edit the selected memo in a vsplit |
+| `s`         | Search your memos                  |
+| `r`         | Refresh the memo list              |
+| `.`         | Load the next page of memos        |
+| `q`         | Quit the list window               |
 
 #### In the Edit/Create Buffer
 
-| Key                | Action                               |
-| ------------------ | ------------------------------------ |
-| `<leader>ms`       | Save the current memo                |
+| Key          | Action                |
+| ------------ | --------------------- |
+| `<leader>ms` | Save the current memo |
 
 ## ⚙️ Configuration
 
 You can override the default settings by passing a table to the `setup()` function.
 
 ```lua
+-- lua/plugins/memos.lua
 require("memos").setup({
   -- REQUIRED: Your Memos host URL
   host = "https://your-memos-host.com",
@@ -138,27 +117,7 @@ require("memos").setup({
 使用 [lazy.nvim](https://github.com/folke/lazy.nvim) 安装:
 
 ```lua
--- lua/plugins/memos.lua
-return {
-	"Elflare/memos.nvim",
-	dependencies = { "nvim-lua/plenary.nvim" },
-	config = function()
-		require("memos").setup({
-			host = "",
-			token = "",
-			pageSize = 50,
-			keymaps = {
-				list = {
-					add_memo = "a",
-					-- ... 其他列表快捷键
-				},
-				buffer = {
-					save = "<leader>ms", -- 这是您想要的保存快捷键
-				},
-			},
-		})
-	end,
-}
+{ "Elflare/memos.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
 ```
 
 ## 🚀 使用方法
@@ -173,34 +132,35 @@ return {
 
 #### 全局快捷键
 
-| 按键               | 功能                               |
-| ------------------ | ---------------------------------- |
-| `<leader>mm`       | 打开 Memos 列表                    |
+| 按键         | 功能            |
+| ------------ | --------------- |
+| `<leader>mm` | 打开 Memos 列表 |
 
 #### 在 Memo 列表窗口中
 
-| 按键               | 功能                               |
-| ------------------ | ---------------------------------- |
-| `a`                | 新增一个 memo                      |
-| `d` 或 `dd`        | 删除所选的 memo                    |
-| `<CR>`             | 编辑所选的 memo                    |
-| `<Tab>`            | 在垂直分屏中编辑所选的 memo        |
-| `s`                | 搜索你的 memos                     |
-| `r`                | 刷新 memo 列表                     |
-| `.`                | 加载下一页 memos                   |
-| `q`                | 退出列表窗口                       |
+| 按键        | 功能                        |
+| ----------- | --------------------------- |
+| `a`         | 新增一个 memo               |
+| `d` 或 `dd` | 删除所选的 memo             |
+| `<CR>`      | 编辑所选的 memo             |
+| `<Tab>`     | 在垂直分屏中编辑所选的 memo |
+| `s`         | 搜索你的 memos              |
+| `r`         | 刷新 memo 列表              |
+| `.`         | 加载下一页 memos            |
+| `q`         | 退出列表窗口                |
 
 #### 在编辑/创建缓冲区中
 
-| 按键               | 功能                               |
-| ------------------ | ---------------------------------- |
-| `<leader>ms`       | 保存当前 memo                      |
+| 按键         | 功能          |
+| ------------ | ------------- |
+| `<leader>ms` | 保存当前 memo |
 
 ## ⚙️ 配置
 
 你可以通过向 `setup()` 函数传递一个 table 来覆盖默认设置。
 
 ```lua
+-- lua/plugins/memos.lua
 require("memos").setup({
   -- 必填: 你的 Memos 服务地址
   host = "https://your-memos-host.com",
