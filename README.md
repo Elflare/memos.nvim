@@ -1,5 +1,7 @@
 # memos.nvim
+
 English | [简体中文](./README.md#memosnvim-简体中文)
+
 A Neovim plugin to interact with [Memos](https://github.com/usememos/memos) right inside the editor. List, create, edit, and delete your memos without leaving Neovim.
 
 ## ✨ Features
