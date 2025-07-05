@@ -1,0 +1,133 @@
+*memos.nvim.txt*      For Neovim | English and 简体中文
+
+==============================================================================
+CONTENTS                                      *memos.nvim-contents*
+
+  1. About....................................|memos-about|
+  2. Features.................................|memos-features|
+  3. Installation.............................|memos-installation|
+  4. Usage....................................|memos-usage|
+  5. Configuration............................|memos-configuration|
+
+==============================================================================
+1. About                                                *memos-about*
+
+A Neovim plugin to interact with Memos (https://github.com/usememos/memos)
+right inside the editor. List, create, edit, and delete your memos without
+leaving Neovim.
+
+一个 Neovim 插件，让你在编辑器内部直接与 Memos 进行交互。无需离开 Neovim
+即可列表、创建、编辑和删除你的 memos。
+
+==============================================================================
+2. Features                                           *memos-features*
+
+- *List Memos*: View, search, and paginate through your memos in a floating
+  window.
+- *Create & Edit*: Create new memos or edit existing ones in a dedicated
+  buffer with `markdown` filetype support.
+- *Delete Memos*: Delete memos directly from the list.
+- *Lazy Loading*: The plugin is loaded only when you run one of its commands.
+- *Customizable*: Configure API endpoints, keymaps, and more.
+
+==============================================================================
+3. Installation                                   *memos-installation*
+
+Requires |plenary.nvim|.
+
+Install with |lazy.nvim|:
+>lua
+-- lua/plugins/memos.lua
+return {
+  {
+    "your-github-username/memos.nvim",
+    name = "memos.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "Memos", "MemosCreate" },
+    config = function()
+      require("memos").setup({
+        host = "https://your-memos-host.com",
+        token = "your-super-secret-token",
+      })
+    end,
+  },
+  {
+    "nvim-lua/plenary.nvim",
+    lazy = true,
+  },
+}
+<
+==============================================================================
+4. Usage                                                  *memos-usage*
+
+COMMANDS                                            *memos-commands*
+
+*:Memos*
+  Opens a floating window to list and search your memos.
+
+*:MemosCreate*
+  Opens a new buffer to create a new memo.
+
+*:MemosSave*
+  (Available in the memo buffer) Saves the memo you are currently
+  creating or editing.
+
+DEFAULT KEYMAPS                                     *memos-keymaps*
+
+*In the Memo List Window:*
+| Key                | Action                               |
+|--------------------|--------------------------------------|
+| `a`                | Add a new memo                       |
+| `d` or `dd`        | Delete the selected memo             |
+| `<CR>`             | Edit the selected memo               |
+| `<Tab>`            | Edit the selected memo in a vsplit   |
+| `s`                | Search your memos                    |
+| `r`                | Refresh the memo list                |
+| `.`                | Load the next page of memos          |
+| `q`                | Quit the list window                 |
+
+*In the Edit/Create Buffer:*
+| Key                | Action                               |
+|--------------------|--------------------------------------|
+| `<leader>ms`       | Save the current memo                |
+
+==============================================================================
+5. Configuration                                *memos-configuration*
+
+You can override the default settings by passing a table to the `setup()`
+function.
+
+Default configuration:
+>lua
+require("memos").setup({
+  -- REQUIRED: Your Memos host URL
+  host = "https://your-memos-host.com",
+
+  -- REQUIRED: Your Memos API token (Open API)
+  token = "your-super-secret-token",
+
+  -- Number of memos to fetch per page
+  pageSize = 50,
+
+  -- Set to false or nil to disable a keymap
+  keymaps = {
+    -- Keymaps for the memo list window
+    list = {
+      add_memo = "a",
+      delete_memo = "d",
+      delete_memo_visual = "dd",
+      edit_memo = "<CR>",
+      vsplit_edit_memo = "<Tab>",
+      search_memos = "s",
+      refresh_list = "r",
+      next_page = ".",
+      quit = "q",
+    },
+    -- Keymaps for the editing/creating buffer
+    buffer = {
+      save = "<leader>ms",
+    },
+  },
+})
+<
+vim:tw=78:ts=8:ft=help:norl:
