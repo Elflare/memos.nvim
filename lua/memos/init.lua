@@ -25,8 +25,8 @@ M.config = {
     }
 }
 
-local config_dir = vim.fn.stdpath("config") .. "/memos.nvim"
-local config_file_path = config_dir .. "/config.json"
+local config_dir = vim.fn.stdpath("data") .. "/memos.nvim"
+local config_file_path = config_dir .. "/memos_config.json"
 
 -- 【修改】全新的、能处理 host 和 token 的交互式配置函数
 local function prompt_for_config()
