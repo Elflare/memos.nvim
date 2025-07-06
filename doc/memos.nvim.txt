@@ -27,8 +27,8 @@ leaving Neovim.
 - *Create & Edit*: Create new memos or edit existing ones in a dedicated
   buffer with `markdown` filetype support.
 - *Delete Memos*: Delete memos directly from the list.
-- *Lazy Loading*: The plugin is loaded only when you run one of its commands.
 - *Customizable*: Configure API endpoints, keymaps, and more.
+- *First-time Setup*: On first launch, you will be prompted to enter your Memos host and token. You can choose to save these permanently.
 
 ==============================================================================
 3. Installation                                   *memos-installation*
@@ -38,26 +38,34 @@ Requires |plenary.nvim|.
 Install with |lazy.nvim|:
 >lua
 -- lua/plugins/memos.lua
-return {
-	"Elflare/memos.nvim",
-	dependencies = { "nvim-lua/plenary.nvim" },
-	config = function()
-		require("memos").setup({
-			host = "",
-			token = "",
-			pageSize = 50,
-			keymaps = {
-				list = {
-					add_memo = "a",
-					-- ... other list keymaps
-				},
-				buffer = {
-					save = "<leader>ms", -- Your desired save keymap
-				},
-			},
-		})
-	end,
-}
+require("memos").setup({
+
+  -- Number of memos to fetch per page
+  pageSize = 50,
+  auto_save = false,
+  -- Set to false or nil to disable a keymap
+  keymaps = {
+    -- Keymap to open the memos list. Default: <leader>mm
+    start_memos = "<leader>mm",
+
+    -- Keymaps for the memo list window
+    list = {
+      add_memo = "a",
+      delete_memo = "d",
+      delete_memo_visual = "dd",
+      edit_memo = "<CR>",
+      vsplit_edit_memo = "<Tab>",
+      search_memos = "s",
+      refresh_list = "r",
+      next_page = ".",
+      quit = "q",
+    },
+    -- Keymaps for the editing/creating buffer
+    buffer = {
+      save = "<leader>ms",
+    },
+  },
+})
 <
 ==============================================================================
 4. Usage                                                  *memos-usage*
@@ -106,13 +114,9 @@ function.
 
 Default configuration:
 >lua
+-- lua/plugins/memos.lua
 require("memos").setup({
-  -- REQUIRED: Your Memos host URL
-  host = "https://your-memos-host.com",
-
-  -- REQUIRED: Your Memos API token (Open API)
-  token = "your-super-secret-token",
-
+  auto_save = false,
   -- Number of memos to fetch per page
   pageSize = 50,
 
