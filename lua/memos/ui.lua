@@ -51,59 +51,97 @@ local function render_memos(data, append)
 end
 
 -- 设置编辑 buffer 的通用函数
+-- 【新增】检查内容是否变化并自动保存的函数
+function M.check_and_auto_save()
+  -- 检查是否存在原始内容快照
+  if vim.b.memos_original_content == nil then return end
+
+  local current_content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\n')
+  if vim.b.memos_original_content ~= current_content then
+    M.save_or_create_dispatcher()
+  end
+end
+
+-- 【修改】setup_buffer_for_editing 现在使用全新的自动保存逻辑
 local function setup_buffer_for_editing()
-    vim.bo.buftype = 'nofile'
-    vim.bo.bufhidden = 'wipe'
-    vim.bo.swapfile = false
-    vim.bo.buflisted = true
-    vim.bo.filetype = 'markdown'
+  vim.bo.buftype = 'nofile'
+  vim.bo.bufhidden = 'wipe'
+  vim.bo.swapfile = false
+  vim.bo.buflisted = true
+  vim.bo.filetype = 'markdown'
 
-    local save_key_string = ""
-    if config.keymaps.buffer.save and config.keymaps.buffer.save ~= "" then
-        save_key_string = string.format(" or %s", config.keymaps.buffer.save)
-    end
+  -- 【新增】在 buffer 打开时，立即创建内容快照
+  vim.b.memos_original_content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\n')
 
-    if vim.b.memos_memo_name then
-        vim.notify("Editing memo. Use :MemosSave" .. save_key_string .. " to save.")
-    else
-        vim.notify("📝 New memo. Use :MemosSave" .. save_key_string .. " to create.")
-    end
+  local save_key_string = ""
+  if config.keymaps.buffer.save and config.keymaps.buffer.save ~= "" then
+    save_key_string = string.format(" or %s", config.keymaps.buffer.save)
+  end
 
-    vim.api.nvim_buf_create_user_command(0, 'MemosSave', 'lua require("memos.ui").save_or_create_dispatcher()', {})
-    if config.keymaps.buffer.save and config.keymaps.buffer.save ~= "" then
-        vim.api.nvim_buf_set_keymap(0, 'n', config.keymaps.buffer.save, '<Cmd>MemosSave<CR>', {
-            noremap = true,
-            silent = true
-        })
-    end
+  if vim.b.memos_memo_name then
+    vim.notify("Editing memo. Use :MemosSave" .. save_key_string .. " to save.")
+  else
+    vim.notify("📝 New memo. Use :MemosSave" .. save_key_string .. " to create.")
+  end
 
-    -- 【修改】全新的、更可靠的自动保存逻辑
-    if config.auto_save then
-        local group = vim.api.nvim_create_augroup('MemosAutoSave', {
-            clear = true
-        })
+  vim.api.nvim_buf_create_user_command(0, 'MemosSave', 'lua require("memos.ui").save_or_create_dispatcher()', {})
+  if config.keymaps.buffer.save and config.keymaps.buffer.save ~= "" then
+    vim.api.nvim_buf_set_keymap(0, 'n', config.keymaps.buffer.save, '<Cmd>MemosSave<CR>', { noremap = true, silent = true })
+  end
 
-        -- 1. 进入插入模式时，保存当前内容的快照
-        vim.api.nvim_create_autocmd('InsertEnter', {
-            group = group,
-            buffer = 0,
-            callback = function()
-                vim.b.memos_original_content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\n')
-            end
-        })
+  -- 【修改】设置新的自动命令
+  if config.auto_save then
+    local group = vim.api.nvim_create_augroup('MemosAutoSave', { clear = true })
+    -- 离开插入模式时检查
+    vim.api.nvim_create_autocmd('InsertLeave', {
+      group = group,
+      buffer = 0,
+      callback = M.check_and_auto_save,
+    })
+    -- 光标静止时检查
+    vim.api.nvim_create_autocmd('CursorHold', {
+      group = group,
+      buffer = 0,
+      callback = M.check_and_auto_save,
+    })
+  end
+end
 
-        -- 2. 离开插入模式时，比较内容是否发生变化
-        vim.api.nvim_create_autocmd('InsertLeave', {
-            group = group,
-            buffer = 0,
-            callback = function()
-                local current_content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\n')
-                if vim.b.memos_original_content ~= current_content then
-                    require('memos.ui').save_or_create_dispatcher()
-                end
-            end
-        })
-    end
+-- 【修改】保存成功后，需要更新内容快照
+function M.save_or_create_dispatcher()
+  local memo_name = vim.b.memos_memo_name
+  local current_content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\n')
+
+  if current_content == '' then
+    vim.notify("Memo is empty, not sending.", vim.log.levels.WARN)
+    return
+  end
+
+  if memo_name then
+    api.update_memo(memo_name, current_content, function(success)
+      if success then
+        vim.schedule(function()
+          vim.notify("✅ Memo updated successfully!")
+          -- 更新快照为最新内容
+          vim.b.memos_original_content = current_content
+        end)
+        M.refresh_list_silently()
+      end
+    end)
+  else
+    api.create_memo(current_content, function(new_memo)
+      if new_memo and new_memo.name then
+        vim.schedule(function()
+          vim.notify("✅ Memo created successfully!")
+          vim.cmd('bdelete!')
+          open_memo_for_edit(new_memo, 'enew')
+          M.refresh_list_silently()
+        end)
+      else
+        vim.schedule(function() vim.notify("❌ Failed to create memo.", vim.log.levels.ERROR) end)
+      end
+    end)
+  end
 end
 
 -- 打开一个已存在的 Memo
@@ -149,41 +187,6 @@ function M.refresh_list_silently()
     end)
 end
 
-function M.save_or_create_dispatcher()
-    local memo_name = vim.b.memos_memo_name
-    local content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\n')
-
-    if content == '' then
-        vim.notify("Memo is empty, not sending.", vim.log.levels.WARN)
-        return
-    end
-
-    if memo_name then
-        api.update_memo(memo_name, content, function(success)
-            if success then
-                vim.schedule(function()
-                    vim.notify("✅ Memo updated successfully!")
-                end)
-                M.refresh_list_silently()
-            end
-        end)
-    else
-        api.create_memo(content, function(new_memo)
-            if new_memo and new_memo.name then
-                vim.schedule(function()
-                    vim.notify("✅ Memo created successfully!")
-                    vim.cmd('bdelete!') -- 强制关闭临时的 new_memo buffer
-                    open_memo_for_edit(new_memo, 'enew') -- 用新 memo 的信息打开一个标准的编辑窗口
-                    M.refresh_list_silently()
-                end)
-            else
-                vim.schedule(function()
-                    vim.notify("❌ Failed to create memo.", vim.log.levels.ERROR)
-                end)
-            end
-        end)
-    end
-end
 
 function M.create_memo_in_buffer()
     vim.cmd('enew')
