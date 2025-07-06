@@ -12,12 +12,6 @@ A Neovim plugin to interact with [Memos](https://github.com/usememos/memos) righ
 -   **Customizable**: Configure API endpoints, keymaps, and more.
 -   **First-time Setup**: On first launch, you will be prompted to enter your Memos host and token. You can choose to save these permanently.
 
-> **Config Save Path**:
-> If you choose to save your host and token, the config file will be stored at:
-> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
-> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
-> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
-
 ## 📦 Installation
 
 Requires [plenary.nvim](https://github.com/nvim-lua/plenary.nvim).
@@ -69,9 +63,9 @@ You can override the default settings by passing a table to the `setup()` functi
 
 > **Note:** On first use, you will be prompted to enter your Memos host and token. You can choose to save these permanently.
 > The config file will be stored at:
-> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
-> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
-> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
+> - **macOS**: `~/.local/share/nvim/memos.nvim/memos_config.json`
+> - **Linux**: `~/.local/share/nvim/memos.nvim/memos_config.json`
+> - **Windows**: `~/AppData/Local/nvim-data/memos.nvim/memos_config.json`
 
 ```lua
 -- lua/plugins/memos.lua
@@ -120,12 +114,6 @@ require("memos").setup({
 -   **删除 Memos**: 直接从列表中删除 memo。
 -   **可定制**: 可配置 API 地址、快捷键等。
 -   **首次启动引导**: 首次启动时会提示输入 Memos 的 host 和 token，并询问是否永久保存。
-
-> **配置保存路径**：
-> 如果选择永久保存，配置文件将存储在：
-> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
-> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
-> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
 
 ## 📦 安装
 
@@ -178,9 +166,9 @@ require("memos").setup({
 
 > **注意：** 首次使用时会提示输入 Memos 的 host 和 token，并询问是否永久保存。
 > 配置文件将存储在：
-> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
-> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
-> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
+> - **macOS**: `~/.local/share/nvim/memos.nvim/memos_config.json`
+> - **Linux**: `~/.local/share/nvim/memos.nvim/memos_config.json`
+> - **Windows**: `~/AppData/Local/nvim-data/memos.nvim/memos_config.json`
 
 ```lua
 -- lua/plugins/memos.lua
