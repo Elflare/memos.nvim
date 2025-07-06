@@ -10,6 +10,13 @@ A Neovim plugin to interact with [Memos](https://github.com/usememos/memos) righ
 -   **Create & Edit**: Create new memos or edit existing ones in a dedicated buffer with `markdown` filetype support.
 -   **Delete Memos**: Delete memos directly from the list.
 -   **Customizable**: Configure API endpoints, keymaps, and more.
+-   **First-time Setup**: On first launch, you will be prompted to enter your Memos host and token. You can choose to save these permanently.
+
+> **Config Save Path**:
+> If you choose to save your host and token, the config file will be stored at:
+> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
+> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
+> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
 
 ## 📦 Installation
 
@@ -60,14 +67,15 @@ Install with [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 You can override the default settings by passing a table to the `setup()` function.
 
+> **Note:** On first use, you will be prompted to enter your Memos host and token. You can choose to save these permanently.
+> The config file will be stored at:
+> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
+> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
+> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
+
 ```lua
 -- lua/plugins/memos.lua
 require("memos").setup({
-  -- REQUIRED: Your Memos host URL
-  host = "https://your-memos-host.com",
-
-  -- REQUIRED: Your Memos API token
-  token = "your-super-secret-token",
 
   -- Number of memos to fetch per page
   pageSize = 50,
@@ -111,6 +119,13 @@ require("memos").setup({
 -   **创建与编辑**: 在专用的、支持 `markdown` 文件类型的缓冲区中创建新 memo 或编辑现有 memo。
 -   **删除 Memos**: 直接从列表中删除 memo。
 -   **可定制**: 可配置 API 地址、快捷键等。
+-   **首次启动引导**: 首次启动时会提示输入 Memos 的 host 和 token，并询问是否永久保存。
+
+> **配置保存路径**：
+> 如果选择永久保存，配置文件将存储在：
+> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
+> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
+> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
 
 ## 📦 安装
 
@@ -161,14 +176,15 @@ require("memos").setup({
 
 你可以通过向 `setup()` 函数传递一个 table 来覆盖默认设置。
 
+> **注意：** 首次使用时会提示输入 Memos 的 host 和 token，并询问是否永久保存。
+> 配置文件将存储在：
+> - **macOS**: `~/.config/nvim/memos.nvim/config.json`
+> - **Linux**: `~/.config/nvim/memos.nvim/config.json`
+> - **Windows**: `%USERPROFILE%\AppData\Local\nvim\memos.nvim\config.json`
+
 ```lua
 -- lua/plugins/memos.lua
 require("memos").setup({
-  -- 必填: 你的 Memos 服务地址
-  host = "https://your-memos-host.com",
-
-  -- 必填: 你的 Memos API 令牌
-  token = "your-super-secret-token",
 
   -- 每页获取的 memo 数量
   pageSize = 50,
@@ -196,3 +212,4 @@ require("memos").setup({
     },
   },
 })
+```
