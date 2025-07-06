@@ -73,7 +73,7 @@ require("memos").setup({
 
   -- Number of memos to fetch per page
   pageSize = 50,
-
+  auto_save = false,
   -- Set to false or nil to disable a keymap
   keymaps = {
     -- Keymap to open the memos list. Default: <leader>mm
@@ -176,7 +176,7 @@ require("memos").setup({
 
   -- 每页获取的 memo 数量
   pageSize = 50,
-
+  auto_save = false,
   -- 设置为 false 或 nil 可以禁用某个快捷键
   keymaps = {
     -- 用于打开 Memos 列表的快捷键。默认值: <leader>mm
