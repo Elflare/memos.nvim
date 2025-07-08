@@ -88,7 +88,7 @@ require("memos").setup({
       delete_memo_visual = "dd",
       -- Assign both <CR> and 'i' to edit a memo
       edit_memo = { "<CR>", "i" },
-      vsplit_edit_memo = "<Tab>", -- Use Ctrl-x instead of Tab for better compatibility
+      vsplit_edit_memo = "<Tab>",
       search_memos = "s",
       refresh_list = "r",
       next_page = ".",
@@ -194,7 +194,7 @@ require("memos").setup({
       delete_memo_visual = "dd",
       -- 将 <CR> 和 i 键都设置为编辑功能
       edit_memo = { "<CR>", "i" },
-      vsplit_edit_memo = "<Tab>", -- 使用 Ctrl-x 代替 Tab 以获得更好的兼容性
+      vsplit_edit_memo = "<Tab>",
       search_memos = "s",
       refresh_list = "r",
       next_page = ".",
