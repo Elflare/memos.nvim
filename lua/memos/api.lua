@@ -24,11 +24,11 @@ function M.get_current_user(callback)
   end)
 end
 
-function M.list_memos(parent, filter, pageSize, pageToken, callback)
+function M.list_memos(parent, filter, page_size, pageToken, callback)
   local list_url = config.host .. '/api/v1/memos'
   local params = {}
   table.insert(params, "parent=" .. parent)
-  table.insert(params, "pageSize=" .. tostring(pageSize))
+  table.insert(params, "page_size=" .. tostring(page_size))
   if pageToken and pageToken ~= "" then table.insert(params, "pageToken=" .. pageToken) end
   if filter and filter ~= '' then
     table.insert(params, 'filter=content.contains("' .. vim.fn.escape(filter, '\\"') .. '")')

@@ -180,7 +180,7 @@ function M.refresh_list_silently()
 	if not current_user or not current_user.name then
 		return
 	end
-	api.list_memos(current_user.name, current_filter, config.pageSize, nil, function(data)
+	api.list_memos(current_user.name, current_filter, config.page_size, nil, function(data)
 		M.render_memos(data, false)
 	end)
 end
@@ -223,7 +223,7 @@ function M.show_memos_list(filter)
 			vim.schedule(function()
 				vim.notify("Fetching memos for " .. user.name .. "...")
 			end)
-			api.list_memos(user.name, current_filter, config.pageSize, nil, function(data)
+			api.list_memos(user.name, current_filter, config.page_size, nil, function(data)
 				M.render_memos(data, false)
 			end)
 		else
@@ -233,9 +233,24 @@ function M.show_memos_list(filter)
 		end
 	end)
 
-	local function set_keymap(key, command)
-		if key and key ~= "" then
-			vim.api.nvim_buf_set_keymap(buf_id, "n", key, command, { noremap = true, silent = true })
+	-- 【修改】这个函数现在可以处理单个按键（字符串）或多个按键（table）
+	local function set_keymap(keys, command)
+		if not keys then
+			return
+		end
+
+		if type(keys) == "table" then
+			-- 如果是 table，就为里面的每个按键都设置映射
+			for _, key in ipairs(keys) do
+				if key and key ~= "" then
+					vim.api.nvim_buf_set_keymap(buf_id, "n", key, command, { noremap = true, silent = true })
+				end
+			end
+		else
+			-- 如果只是字符串，就按原来的方式设置
+			if keys and keys ~= "" then
+				vim.api.nvim_buf_set_keymap(buf_id, "n", keys, command, { noremap = true, silent = true })
+			end
 		end
 	end
 
@@ -265,7 +280,7 @@ function M.load_next_page()
 	vim.schedule(function()
 		vim.notify("Loading next page...")
 	end)
-	api.list_memos(current_user.name, current_filter, config.pageSize, current_page_token, function(data)
+	api.list_memos(current_user.name, current_filter, config.page_size, current_page_token, function(data)
 		M.render_memos(data, true)
 	end)
 end

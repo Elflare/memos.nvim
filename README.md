@@ -63,17 +63,19 @@ You can override the default settings by passing a table to the `setup()` functi
 
 > **Note:** On first use, you will be prompted to enter your Memos host and token. You can choose to save these permanently.
 > The config file will be stored at:
-> - **macOS**: `~/.local/share/nvim/memos.nvim/memos_config.json`
-> - **Linux**: `~/.local/share/nvim/memos.nvim/memos_config.json`
-> - **Windows**: `~/AppData/Local/nvim-data/memos.nvim/memos_config.json`
+> - **macOS / Linux**: `~/.local/share/nvim/memos.nvim/config.json`
+> - **Windows**: `~/AppData/Local/nvim-data/memos.nvim/config.json`
 
 ```lua
 -- lua/plugins/memos.lua
 require("memos").setup({
 
   -- Number of memos to fetch per page
-  pageSize = 50,
+  page_size = 50,
+
+  -- Auto-save the memo when leaving insert mode or holding the cursor.
   auto_save = false,
+
   -- Set to false or nil to disable a keymap
   keymaps = {
     -- Keymap to open the memos list. Default: <leader>mm
@@ -84,8 +86,9 @@ require("memos").setup({
       add_memo = "a",
       delete_memo = "d",
       delete_memo_visual = "dd",
-      edit_memo = "<CR>",
-      vsplit_edit_memo = "<Tab>",
+      -- Assign both <CR> and 'i' to edit a memo
+      edit_memo = { "<CR>", "i" },
+      vsplit_edit_memo = "<Tab>", -- Use Ctrl-x instead of Tab for better compatibility
       search_memos = "s",
       refresh_list = "r",
       next_page = ".",
@@ -166,17 +169,19 @@ require("memos").setup({
 
 > **注意：** 首次使用时会提示输入 Memos 的 host 和 token，并询问是否永久保存。
 > 配置文件将存储在：
-> - **macOS**: `~/.local/share/nvim/memos.nvim/memos_config.json`
-> - **Linux**: `~/.local/share/nvim/memos.nvim/memos_config.json`
-> - **Windows**: `~/AppData/Local/nvim-data/memos.nvim/memos_config.json`
+> - **macOS / Linux**: `~/.local/share/nvim/memos.nvim/config.json`
+> - **Windows**: `~/AppData/Local/nvim-data/memos.nvim/config.json`
 
 ```lua
 -- lua/plugins/memos.lua
 require("memos").setup({
 
   -- 每页获取的 memo 数量
-  pageSize = 50,
+  page_size = 50,
+
+  -- 当离开插入模式或光标静止时，自动保存 memo。
   auto_save = false,
+
   -- 设置为 false 或 nil 可以禁用某个快捷键
   keymaps = {
     -- 用于打开 Memos 列表的快捷键。默认值: <leader>mm
@@ -187,8 +192,9 @@ require("memos").setup({
       add_memo = "a",
       delete_memo = "d",
       delete_memo_visual = "dd",
-      edit_memo = "<CR>",
-      vsplit_edit_memo = "<Tab>",
+      -- 将 <CR> 和 i 键都设置为编辑功能
+      edit_memo = { "<CR>", "i" },
+      vsplit_edit_memo = "<Tab>", -- 使用 Ctrl-x 代替 Tab 以获得更好的兼容性
       search_memos = "s",
       refresh_list = "r",
       next_page = ".",

@@ -4,7 +4,7 @@ M.config = {
     host = nil,
     token = nil,
     auto_save = false,
-    pageSize = 50,
+    page_size = 50,
     keymaps = {
         start_memos = "<leader>mm",
         -- 在列表窗口中的快捷键
