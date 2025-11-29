@@ -48,11 +48,23 @@ function M.render_memos(data, append)
 	end)
 end
 
+function M.return_to_list()
+	local current_edit_buf = vim.api.nvim_get_current_buf()
+
+	-- 1. 先重新显示列表 (这会将当前窗口的内容切换回列表 Buffer)
+	M.show_memos_list(current_filter)
+
+	-- 2. 然后安全地销毁刚才那个编辑 Buffer (force = true 忽略未保存修改)
+	if vim.api.nvim_buf_is_valid(current_edit_buf) then
+		vim.cmd("bwipeout! " .. current_edit_buf)
+	end
+end
+
 function M.setup_buffer_for_editing()
 	vim.bo.buftype = "nofile"
 	vim.bo.bufhidden = "wipe"
 	vim.bo.swapfile = false
-	vim.bo.buflisted = true
+	vim.bo.buflisted = false
 	vim.bo.filetype = "markdown"
 
 	vim.b.memos_original_content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
@@ -77,6 +89,16 @@ function M.setup_buffer_for_editing()
 			"<Cmd>MemosSave<CR>",
 			{ noremap = true, silent = true }
 		)
+		-- 【新增】绑定返回列表快捷键
+		if config.keymaps.buffer.back_to_list and config.keymaps.buffer.back_to_list ~= "" then
+			vim.api.nvim_buf_set_keymap(
+				0,
+				"n",
+				config.keymaps.buffer.back_to_list,
+				'<Cmd>lua require("memos.ui").return_to_list()<CR>',
+				{ noremap = true, silent = true }
+			)
+		end
 	end
 
 	if config.auto_save then
@@ -214,13 +236,16 @@ local function create_float_window(buf)
 		title_pos = "center",
 	}
 
-	return vim.api.nvim_open_win(buf, true, opts)
+	local win = vim.api.nvim_open_win(buf, true, opts)
+	-- 关键：标记这个窗口是 Memos 的专用窗口
+	vim.api.nvim_win_set_var(win, "memos_window", true)
+	return win
 end
 
 function M.show_memos_list(filter)
 	current_filter = filter
 	local should_create_buf = true
-	
+
 	-- 检查 buffer 是否存在且有效
 	if buf_id and vim.api.nvim_buf_is_valid(buf_id) then
 		should_create_buf = false
@@ -231,6 +256,8 @@ function M.show_memos_list(filter)
 		vim.bo[buf_id].swapfile = false
 		vim.bo[buf_id].filetype = "memos_list"
 		vim.bo[buf_id].modifiable = false
+		vim.bo[buf_id].buflisted = false
+		vim.bo[buf_id].bufhidden = "wipe"
 	end
 
 	-- 检查该 buffer 是否已经在一个窗口中打开
@@ -238,11 +265,27 @@ function M.show_memos_list(filter)
 	if win_id ~= -1 then
 		vim.api.nvim_set_current_win(win_id)
 	else
-		-- 【修改】根据配置决定打开方式
 		if config.window and config.window.enable_float then
-			create_float_window(buf_id)
+			-- 【新增】查找是否已经存在 Memos 浮动窗口
+			local found_win = nil
+			for _, w in ipairs(vim.api.nvim_list_wins()) do
+				local s, v = pcall(vim.api.nvim_win_get_var, w, "memos_window")
+				if s and v == true and vim.api.nvim_win_is_valid(w) then
+					found_win = w
+					break
+				end
+			end
+
+			if found_win then
+				-- 如果找到了，就复用它，直接切换 buffer
+				vim.api.nvim_set_current_win(found_win)
+				vim.api.nvim_set_current_buf(buf_id)
+			else
+				-- 没找到才新建
+				create_float_window(buf_id)
+			end
 		else
-			-- 传统方式：直接切换到该 buffer
+			-- 非浮动模式，直接切换 buffer
 			vim.api.nvim_set_current_buf(buf_id)
 		end
 	end
@@ -291,7 +334,7 @@ function M.show_memos_list(filter)
 		local list_keymaps = config.keymaps.list
 		set_keymap(list_keymaps.edit_memo, '<Cmd>lua require("memos.ui").edit_selected_memo()<CR>')
 		set_keymap(list_keymaps.vsplit_edit_memo, '<Cmd>lua require("memos.ui").edit_selected_memo_in_vsplit()<CR>')
-		set_keymap(list_keymaps.quit, "<Cmd>bdelete!<CR>")
+		set_keymap(list_keymaps.quit, "<Cmd>bwipeout!<CR>")
 		set_keymap(list_keymaps.search_memos, '<Cmd>lua require("memos.ui").search_memos()<CR>')
 		set_keymap(list_keymaps.refresh_list, '<Cmd>lua require("memos.ui").show_memos_list()<CR>')
 		set_keymap(list_keymaps.next_page, '<Cmd>lua require("memos.ui").load_next_page()<CR>')

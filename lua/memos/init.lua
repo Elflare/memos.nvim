@@ -7,7 +7,7 @@ M.config = {
 	page_size = 50,
 	-- 【新增】窗口配置
 	window = {
-		enable_float = false, -- 默认为 false，设为 true 则开启浮动窗口
+		enable_float = true, -- 默认为 false，设为 true 则开启浮动窗口
 		width = 0.85, -- 宽度占屏幕比例
 		height = 0.85, -- 高度占屏幕比例
 		border = "rounded", -- 边框样式: "single", "double", "rounded", "solid", "shadow"
@@ -29,6 +29,7 @@ M.config = {
 		-- 在编辑和创建窗口中的快捷键
 		buffer = {
 			save = "<leader>ms",
+            back_to_list = '<Esc>'
 		},
 	},
 }
