@@ -193,25 +193,58 @@ function M.create_memo_in_buffer()
 	M.setup_buffer_for_editing()
 end
 
+-- 【新增】创建居中浮动窗口的辅助函数
+local function create_float_window(buf)
+	local width = math.floor(vim.o.columns * (config.window.width or 0.8))
+	local height = math.floor(vim.o.lines * (config.window.height or 0.8))
+
+	-- 计算居中位置
+	local row = math.floor((vim.o.lines - height) / 2)
+	local col = math.floor((vim.o.columns - width) / 2)
+
+	local opts = {
+		relative = "editor",
+		row = row,
+		col = col,
+		width = width,
+		height = height,
+		style = "minimal",
+		border = config.window.border or "rounded",
+		title = " Memos ",
+		title_pos = "center",
+	}
+
+	return vim.api.nvim_open_win(buf, true, opts)
+end
+
 function M.show_memos_list(filter)
 	current_filter = filter
 	local should_create_buf = true
+	
+	-- 检查 buffer 是否存在且有效
 	if buf_id and vim.api.nvim_buf_is_valid(buf_id) then
 		should_create_buf = false
 	else
-		buf_id = vim.api.nvim_create_buf(true, true)
-		vim.api.nvim_buf_set_name(buf_id, " Memos")
+		buf_id = vim.api.nvim_create_buf(false, true) -- 改为 false, true (unlisted, scratch)
+		vim.api.nvim_buf_set_name(buf_id, "MemosList")
 		vim.bo[buf_id].buftype = "nofile"
 		vim.bo[buf_id].swapfile = false
 		vim.bo[buf_id].filetype = "memos_list"
 		vim.bo[buf_id].modifiable = false
 	end
 
+	-- 检查该 buffer 是否已经在一个窗口中打开
 	local win_id = vim.fn.bufwinid(buf_id)
 	if win_id ~= -1 then
 		vim.api.nvim_set_current_win(win_id)
 	else
-		vim.api.nvim_set_current_buf(buf_id)
+		-- 【修改】根据配置决定打开方式
+		if config.window and config.window.enable_float then
+			create_float_window(buf_id)
+		else
+			-- 传统方式：直接切换到该 buffer
+			vim.api.nvim_set_current_buf(buf_id)
+		end
 	end
 
 	vim.schedule(function()

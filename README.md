@@ -11,6 +11,7 @@ A Neovim plugin to interact with [Memos](https://github.com/usememos/memos) righ
 -   **Delete Memos**: Delete memos directly from the list.
 -   **Customizable**: Configure API endpoints, keymaps, and more.
 -   **First-time Setup**: On first launch, you will be prompted to enter your Memos host and token. You can choose to save these permanently.
+-   **Floating Window**: Optional LazyVim-style floating window for the memo list.
 
 ## 📦 Installation
 
@@ -75,6 +76,13 @@ require("memos").setup({
 
   -- Auto-save the memo when leaving insert mode or holding the cursor.
   auto_save = false,
+ -- Window configuration
+  window = {
+        enable_float = false, -- Set to true to open the list in a floating window
+        width = 0.85,         -- Width ratio (0.0 to 1.0)
+        height = 0.85,        -- Height ratio (0.0 to 1.0)
+        border = "rounded",   -- Border style: "single", "double", "rounded", "solid", "shadow"
+      },
 
   -- Set to false or nil to disable a keymap
   keymaps = {
@@ -117,6 +125,7 @@ require("memos").setup({
 -   **删除 Memos**: 直接从列表中删除 memo。
 -   **可定制**: 可配置 API 地址、快捷键等。
 -   **首次启动引导**: 首次启动时会提示输入 Memos 的 host 和 token，并询问是否永久保存。
+-   **浮动窗口**: 可选的 LazyVim 风格浮动窗口来展示 memo 列表。
 
 ## 📦 安装
 
@@ -181,6 +190,13 @@ require("memos").setup({
 
   -- 当离开插入模式或光标静止时，自动保存 memo。
   auto_save = false,
+  -- 窗口配置
+  window = {
+        enable_float = false, -- 设置为 true 以在浮动窗口中打开列表
+        width = 0.85,         -- 宽度比例 (0.0 到 1.0)
+        height = 0.85,        -- 高度比例 (0.0 到 1.0)
+        border = "rounded",   -- 边框样式: "single", "double", "rounded", "solid", "shadow"
+      },
 
   -- 设置为 false 或 nil 可以禁用某个快捷键
   keymaps = {

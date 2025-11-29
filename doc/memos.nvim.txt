@@ -43,6 +43,13 @@ require("memos").setup({
   -- Number of memos to fetch per page
   pageSize = 50,
   auto_save = false,
+  -- Window configuration
+  window = {
+    enable_float = false, -- Set to true to open the list in a floating window
+    width = 0.85,         -- Width ratio (0.0 to 1.0)
+    height = 0.85,        -- Height ratio (0.0 to 1.0)
+    border = "rounded",   -- Border style: "single", "double", "rounded", "solid", "shadow"
+  },
   -- Set to false or nil to disable a keymap
   keymaps = {
     -- Keymap to open the memos list. Default: <leader>mm
