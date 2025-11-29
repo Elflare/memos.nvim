@@ -105,6 +105,8 @@ require("memos").setup({
     -- Keymaps for the editing/creating buffer
     buffer = {
       save = "<leader>ms",
+      -- Back to list from a memo
+      back_to_list = '<Esc>'
     },
   },
 })
@@ -219,6 +221,8 @@ require("memos").setup({
     -- 编辑/创建窗口的快捷键
     buffer = {
       save = "<leader>ms",
+      -- 从memo中返回列表的快捷键，默认设为 Esc
+      back_to_list = '<Esc>' 
     },
   },
 })

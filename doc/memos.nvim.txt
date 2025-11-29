@@ -147,6 +147,8 @@ require("memos").setup({
     -- Keymaps for the editing/creating buffer
     buffer = {
       save = "<leader>ms",
+      -- Back to list from a memo
+      back_to_list = '<Esc>'
     },
   },
 })
