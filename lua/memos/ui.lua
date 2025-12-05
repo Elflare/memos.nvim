@@ -14,6 +14,10 @@ function M.render_memos(data, append)
 		if not buf_id or not vim.api.nvim_buf_is_valid(buf_id) then
 			return
 		end
+		if not data then
+			vim.notify("API returned no data.", vim.log.levels.WARN)
+			return
+		end
 		local new_memos = data.memos or {}
 		current_page_token = data.nextPageToken or ""
 		if append then
